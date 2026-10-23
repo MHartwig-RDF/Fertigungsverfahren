@@ -1065,6 +1065,11 @@ function pickVoice(){const vs=voices();if(!vs.length)return null;return vs.find(
 function speechClean(t){return String(t).replace(/(^|\.\s)\+\s/g,'$1Vorteil: ').replace(/(^|\.\s)[−-]\s/g,'$1Nachteil: ').replace(/⚠/g,'').replace(/(\d)–(\d)/g,'$1 bis $2').replace(/≈\s*/g,'etwa ').replace(/µm/g,' Mikrometer').replace(/ %/g,' Prozent').replace(/%/g,' Prozent').replace(/Ø\s*/g,'Durchmesser ').replace(/→/g,' führt zu ').replace(/z\. B\./g,'zum Beispiel').replace(/ca\./g,'circa').replace(/\bGJL\b/g,'Grauguss').replace(/\bNE-/g,'N E ').replace(/\bRz\b/g,'R z').replace(/\bRa\b/g,'R a').replace(/\bFT\b/g,'F T').replace(/\bPM\b/g,'Pulvermetallurgie').replace(/\s+/g,' ').trim()}
 let speakTok=0;
 let VA=null,audioBad=false;
+const BG={a:null,own:null,bad:false,vol:.07,t:null};
+function bgFade(to,end){clearInterval(BG.t);const a=BG.a;if(!a)return;BG.t=setInterval(()=>{const d=to-a.volume;if(Math.abs(d)<.01){a.volume=to;clearInterval(BG.t);end&&end()}else a.volume=Math.max(0,Math.min(1,a.volume+Math.sign(d)*.01))},40)}
+function bgOn(o){if(BG.bad)return;try{if(!BG.a){BG.a=new Audio('audio/background.mp3');BG.a.loop=true;BG.a.volume=0;BG.a.onerror=()=>{BG.bad=true};}
+ BG.own=o;if(BG.a.paused){const p=BG.a.play();if(p&&p.catch)p.catch(()=>{});}bgFade(BG.vol)}catch(e){BG.bad=true}}
+function bgOff(o){if(!BG.a||(o&&BG.own!==o))return;BG.own=null;bgFade(0,()=>{try{BG.a.pause()}catch(e){}})}
 function stopSpeech(){speakTok++;try{speechSynthesis.cancel()}catch(e){}if(VA){try{VA.onended=VA.onerror=null;VA.pause()}catch(e){}VA=null}}
 function say(text,done,src){
  stopSpeech();const tok=speakTok;
@@ -1129,7 +1134,7 @@ function aniPlayer(key){
  function go(i){const old=n;stopSpeech();n=(i+N)%N;aniApply(stage,A,n);render();
   if(A.steps[n].q&&started){ov.innerHTML='';ov.append(h('small',{},'Quizfrage'),h('b',{},'Jetzt sind Sie dran!'));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}
   else if(A.chapters&&(A.steps[n].ch!==A.steps[old].ch||i===0&&old===0)){ov.innerHTML='';ov.append(h('small',{},'Kapitel '+(A.steps[n].ch+1)),h('b',{},A.chapters[A.steps[n].ch]));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}}
- function tick(){clearTimeout(timer);const b=bar.firstChild;b.style.animation='none';void b.offsetWidth;
+ function tick(){clearTimeout(timer);const b=bar.firstChild;if(VO.on&&playing&&vis&&started)bgOn(root);else bgOff(root);b.style.animation='none';void b.offsetWidth;
   if(voiceOn()&&playing&&vis&&started){b.style.animation='none';narrate();return}
   if(!voiceOn())stopSpeech();
   const hold=A.steps[n].q&&answered[n]===undefined;if(playing&&vis&&!hold){b.style.animation='aniFill 6.5s linear forwards';timer=setTimeout(()=>{go(n+1);tick()},6500)}else b.style.animation='none'}
@@ -1137,7 +1142,7 @@ function aniPlayer(key){
  prev.onclick=()=>{go(n-1);restart()};next.onclick=()=>{go(n+1);restart()};
  play.onclick=()=>{playing=!playing;play.textContent=playing?'⏸':'▶';if(!playing)stopSpeech();tick()};
  root.start=()=>{started=true;n=0;go(0);tick()};
- root.stop=()=>{started=false;stopSpeech();clearTimeout(timer)};
+ root.stop=()=>{started=false;stopSpeech();bgOff(root);clearTimeout(timer)};
  root.setVis=v=>{vis=v;tick()};
  if('IntersectionObserver' in window)new IntersectionObserver(es=>{const v=es[0].isIntersecting;if(v!==vis){vis=v;tick()}},{threshold:.05}).observe(root);
  aniApply(stage,A,0);render();
