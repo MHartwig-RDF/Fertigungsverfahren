@@ -457,14 +457,14 @@ const MODS=[
  {id:'tools',t:'Werkzeugkasten',s:'Drei Verfahren',w:'Einzel / Partner'},
  {id:'crit',t:'Kriterien',s:'Anforderungen lesen',w:'Einzel / Partner'},
  {id:'be',t:'Stückzahl & Kosten',s:'Break-even',w:'Einzel / Partner'},
- {id:'muster',t:'Musterfall: Lagerbock',s:'Gruppenstation',w:'Gruppe (3–4)'},
+ {id:'muster',t:'Musterfall: Lagerbock',s:'Musterfall (Pflicht)',w:'Schnelle: Einzel/Partner · spätestens Gruppe'},
  {id:'B',t:'Pumpendeckel',s:'Gruppenstation',w:'Gruppe (3–4)'},
  {id:'C',t:'Abdeckkappe',s:'Gruppenstation',w:'Gruppe (3–4)'},
  {id:'A',t:'E-Motor-Deckel',s:'Gruppenstation',w:'Gruppe (3–4)'},
  {id:'C2',t:'Abdeckkappe mit Dichtfläche',s:'Puffer / Transfer',w:'Gruppe – nur bei großen Klassen'},
  {id:'end',t:'Abschluss',s:'Reflexion & Dokument',w:'Gruppe / Einzel'}
 ];
-const STATIONS=[5,6,7,8,9],CORE=[0,1,2,3,4,10];
+const STATIONS=[5,6,7,8,9],CORE=[0,1,2,3,4,5,10];
 let S=freshState();
 function freshState(){return {step:0,team:'',seen:{},obs:{},zuord:{},crit:{},muster:null,be:{},cards:{},ref:{},stop:{},puz:{},puzSG:{},aus:'',visit:{start:false},cel:{}}}
 function emptyCard(){return {ko:{SG:[0,''],FG:[0,''],DG:[0,'']},w:CR.map(()=>0),pts:{SG:Array(8).fill(-1),FG:Array(8).fill(-1),DG:Array(8).fill(-1)},rec:'',why:'',chain:[],chk:false}}
@@ -514,10 +514,10 @@ function done(i){
  if(m==='end')return !!S.stop.checked&&!!S.exported;
  return false;
 }
-function stationsDone(){return STATIONS.filter(i=>done(i)).length}
+function stationsDone(){return STATIONS.filter(i=>i!==5&&done(i)).length}
 function unlocked(i){if(TESTMODE)return true;
  if(i<=3){for(let k=0;k<i;k++)if(!done(k))return false;return true}
- if(i===10)return [1,2,3,4].every(done)&&stationsDone()>=1;
+ if(i===10)return [1,2,3,4,5].every(done)&&stationsDone()>=1;
  return [1,2,3].every(done)}
 
 /* =====================================================================
@@ -1219,7 +1219,7 @@ build[0]=()=>{
    h('ul',{html:'<li>Sie ordnen Sandguss, Feinguss und Druckguss in DIN 8580 ein und beschreiben ihren Ablauf. <span class="chip">AFB I</span></li><li>Sie vergleichen die Formprinzipien (verlorene Form, verlorenes Modell, Dauerform). <span class="chip">AFB II</span></li><li>Sie leiten aus einem Auftrag Kriterien und K.-o.-Kriterien ab. <span class="chip">AFB II</span></li><li>Sie wählen mit gewichteter Nutzwertmatrix ein Verfahren aus und begründen es. <span class="chip cu">AFB III</span></li><li>Sie erklären den Zusammenhang Stückzahl – Werkzeugkosten – Stückkosten. <span class="chip">AFB II</span></li><li>Sie erkennen gussgerechte Gestaltung am 3D-Modell und beurteilen die Wirkung von Rippen, Wanddicken und Querbohrung. <span class="chip cu">AFB II–III</span></li><li>Sie beurteilen Verfahren nach Umwelt und Arbeitssicherheit (STOP-Prinzip). <span class="chip cu">AFB III</span></li>'})),
   h('div',{class:'card'},h('h3',{},'Ihr Weg durch den Kurs'),list,
    h('p',{class:'small'},'Jede Station endet mit einem Freigabe-Gate: Erst wenn die Aufgaben bearbeitet sind, schaltet der nächste Schritt frei.')),
-  h('div',{class:'card'},h('h3',{},'Arbeitsformen'),h('div',{class:'scroll'},h('table',{class:'t'},h('thead',{},h('tr',{},h('th',{},'Station'),h('th',{},'Arbeitsform'))),h('tbody',{},h('tr',{},h('td',{},'1 · 2 · 3 · 5'),h('td',{},'Einzel- oder Partnerarbeit: Basiswissen für alle')),h('tr',{},h('td',{},'4 · 6 · 7 · 8'),h('td',{},'Gruppenstationen (3–4 Personen): Jede Gruppe bearbeitet eine Station. Die Lehrkraft teilt zu.')),h('tr',{},h('td',{},'9'),h('td',{},'Puffer: nur bei großen Klassen oder für besonders schnelle Gruppen')),h('tr',{},h('td',{},'10'),h('td',{},'Abschluss: Ergebnisse sichern, Umwelt und Arbeitssicherheit beurteilen'))))),h('p',{class:'small'},'Reihenfolge: erst 1 → 2 → 3 → 5, danach Ihre Gruppenstation, zuletzt der Abschluss.')),
+  h('div',{class:'card'},h('h3',{},'Arbeitsformen'),h('div',{class:'scroll'},h('table',{class:'t'},h('thead',{},h('tr',{},h('th',{},'Station'),h('th',{},'Arbeitsform'))),h('tbody',{},h('tr',{},h('td',{},'1 · 2 · 3 · 4'),h('td',{},'Einzel- oder Partnerarbeit: Basiswissen für alle')),h('tr',{},h('td',{},'5'),h('td',{},'Musterfall: Schnelle bearbeiten ihn schon in Einzel- oder Partnerarbeit, spätestens erledigt ihn die Gruppe gemeinsam. Pflicht für alle.')),h('tr',{},h('td',{},'6 · 7 · 8'),h('td',{},'Gruppenstationen (3–4 Personen, Pflicht): Jede Gruppe bearbeitet eine Station. Die Lehrkraft teilt zu.')),h('tr',{},h('td',{},'9'),h('td',{},'Puffer: nur bei großen Klassen oder für besonders schnelle Gruppen')),h('tr',{},h('td',{},'10'),h('td',{},'Abschluss (Einzel, Partner, Gruppe oder Plenum): Ergebnisse sichern, Umwelt und Arbeitssicherheit beurteilen'))))),h('p',{class:'small'},'Reihenfolge: erst 1 → 2 → 3 → 4, dann der Musterfall (5), danach Ihre Gruppenstation (6–8), zuletzt der Abschluss.')),
   h('div',{class:'card'},h('label',{},h('b',{},'Teamname '),'(keine Klarnamen) '),team,h('p',{class:'small'},'Ihr Stand wird in diesem Browser gespeichert. Über „Stand ⇅“ oben speichern Sie ihn als Datei.')),
   h('div',{class:'nav'},h('span'),h('button',{class:'btn',onclick:()=>{S.visit.start=true;save();go(1)}},'Los geht’s →')));
 };
@@ -1443,7 +1443,7 @@ build[4]=()=>{
    h('div',{class:'q'},h('p',{html:'<b>b)</b> Welches Verfahren hat die niedrigsten Stückkosten …'}),h('div',{class:'grid3'},...Object.entries(mc).map(([x,s])=>h('label',{},(x==200?'bei 200':x==2000?'bei 2 000':'bei 20 000')+' Stück ',s)))),
    h('p',{},chk),fb1),
   h('div',{class:'card'},h('h3',{},'Reflexion'),h('p',{},'Die Stückkosten entscheiden nicht allein. Nennen Sie zwei Gründe, warum bei einer hohen Stückzahl trotzdem nicht automatisch das Verfahren mit den niedrigsten Stückkosten gewählt wird (denken Sie an die Produkte).'),refl),
-  h('div',{class:'card tint'},h('h3',{},'Weiter: Ihre Gruppenstation'),h('p',{},'Ihre Lehrkraft teilt Ihrer Gruppe eine Station zu. Die Stationen sind unabhängig voneinander. Nach Ihrer Station geht es zum Abschluss (Station 10).'),stList),
+  h('div',{class:'card tint'},h('h3',{},'Weiter: Musterfall und Gruppenstation'),h('p',{},'Station 5 (Musterfall) bearbeiten alle, die Schnellen schon jetzt, spätestens die Gruppe. Danach teilt Ihre Lehrkraft Ihrer Gruppe eine der Stationen 6–8 zu (9 ist Puffer). Nach Ihrer Gruppenstation geht es zum Abschluss (Station 10).'),stList),
   
   navBar(4));
 };
@@ -1553,7 +1553,7 @@ function ensure(i){if(!$('#step'+i)){const e=build[i]();mainEl.append(e);if(init
 function rebuild(i){const o=$('#step'+i);if(o)o.remove();viewers['vc'+MODS[i].id]=null;ensure(i);show(i)}
 function renderStepper(){
  const st=$('#stepper');st.innerHTML='';let n=0;
- let sd=0;MODS.forEach((m,i)=>{const d=done(i);if(d){if(STATIONS.includes(i)){sd++;if(sd===1)n++}else n++}if(d&&!S.cel[m.id]){S.cel[m.id]=1;save();if(window.__ready&&i>0){burst();toast('✔ Station geschafft: '+m.t)}}const lock=!unlocked(i);
+ let sd=0;MODS.forEach((m,i)=>{const d=done(i);if(d){if(STATIONS.includes(i)&&i!==5){sd++;if(sd===1)n++}else n++}if(d&&!S.cel[m.id]){S.cel[m.id]=1;save();if(window.__ready&&i>0){burst();toast('✔ Station geschafft: '+m.t)}}const lock=!unlocked(i);
   const b=h('button',{class:'dot'+(d?' done':'')+(i===S.step?' cur':'')+(lock?' locked':''),title:m.t+(lock?' (gesperrt)':''),'aria-label':m.t,onclick:()=>go(i)},i===0?'⌂':(d?'✓':String(i)));st.append(b)});
  $('#pfill').style.width=Math.round(n/(CORE.length+1)*100)+'%';
  const cur=$('.dot.cur',st);if(cur&&cur.scrollIntoView)cur.parentElement.scrollLeft=cur.offsetLeft-60;
