@@ -1062,11 +1062,16 @@ const VO={on:false,rate:1.1,name:''};
 function voices(){try{return(speechSynthesis.getVoices()||[]).filter(v=>/^de/i.test(v.lang))}catch(e){return[]}}
 function voiceScore(v){const n=v.name;let s=0;if(/anna/i.test(n)&&/premium/i.test(n))s+=200;else if(/anna/i.test(n)&&/erweitert|enhanced/i.test(n))s+=120;if(/premium|enhanced|erweitert|natural|neural|online/i.test(n))s+=50;if(/siri/i.test(n))s+=40;if(/anna|katja|conrad|amala|seraphina|florian|petra|markus|marlene|viktor/i.test(n))s+=20;if(/google deutsch/i.test(n))s+=15;if(/^de-DE|de_DE/i.test(v.lang))s+=5;if(/compact|eloquence|grandpa|grandma|rocko|shelley|flo|sandy|reed|eddy/i.test(n))s-=40;return s}
 function pickVoice(){const vs=voices();if(!vs.length)return null;return vs.find(v=>v.name===VO.name)||vs.slice().sort((a,b)=>voiceScore(b)-voiceScore(a))[0]}
-function speechClean(t){return String(t).replace(/⚠/g,'').replace(/(\d)–(\d)/g,'$1 bis $2').replace(/≈\s*/g,'etwa ').replace(/µm/g,' Mikrometer').replace(/ %/g,' Prozent').replace(/%/g,' Prozent').replace(/Ø\s*/g,'Durchmesser ').replace(/→/g,' führt zu ').replace(/z\. B\./g,'zum Beispiel').replace(/ca\./g,'circa').replace(/\bGJL\b/g,'Grauguss').replace(/\bNE-/g,'N E ').replace(/\bRz\b/g,'R z').replace(/\bRa\b/g,'R a').replace(/\bFT\b/g,'F T').replace(/\bPM\b/g,'Pulvermetallurgie').replace(/\s+/g,' ').trim()}
+function speechClean(t){return String(t).replace(/(^|\.\s)\+\s/g,'$1Vorteil: ').replace(/(^|\.\s)[−-]\s/g,'$1Nachteil: ').replace(/⚠/g,'').replace(/(\d)–(\d)/g,'$1 bis $2').replace(/≈\s*/g,'etwa ').replace(/µm/g,' Mikrometer').replace(/ %/g,' Prozent').replace(/%/g,' Prozent').replace(/Ø\s*/g,'Durchmesser ').replace(/→/g,' führt zu ').replace(/z\. B\./g,'zum Beispiel').replace(/ca\./g,'circa').replace(/\bGJL\b/g,'Grauguss').replace(/\bNE-/g,'N E ').replace(/\bRz\b/g,'R z').replace(/\bRa\b/g,'R a').replace(/\bFT\b/g,'F T').replace(/\bPM\b/g,'Pulvermetallurgie').replace(/\s+/g,' ').trim()}
 let speakTok=0;
-function stopSpeech(){speakTok++;try{speechSynthesis.cancel()}catch(e){}}
-function say(text,done){
+let VA=null,audioBad=false;
+function stopSpeech(){speakTok++;try{speechSynthesis.cancel()}catch(e){}if(VA){try{VA.onended=VA.onerror=null;VA.pause()}catch(e){}VA=null}}
+function say(text,done,src){
  stopSpeech();const tok=speakTok;
+ if(src&&!audioBad){try{const a=new Audio(src);a.playbackRate=Math.max(.8,Math.min(1.4,VO.rate/1.1));VA=a;
+  a.onended=()=>{if(tok!==speakTok)return;VA=null;done&&done()};
+  a.onerror=()=>{if(tok!==speakTok)return;VA=null;audioBad=true;say(text,done)};
+  const p=a.play();if(p&&p.catch)p.catch(e=>{if(tok!==speakTok)return;VA=null;if(e&&e.name==='NotAllowedError'){VO.on=false;done&&done()}else{audioBad=true;say(text,done)}});return}catch(e){}}
  if(!('speechSynthesis' in window)){done&&done();return}
  const parts=speechClean(text).split(/(?<=[.!?:])\s+/).filter(Boolean);
  const v=pickVoice();let i=0;
@@ -1113,13 +1118,14 @@ function aniPlayer(key){
    if(answered[n]!==undefined){restoring=true;os[answered[n]].click();restoring=false}}
   info.classList.remove('pop');void info.offsetWidth;info.classList.add('pop');
  }
- const voiceOn=()=>VO.on&&'speechSynthesis' in window;
+ const voiceOn=()=>VO.on&&('speechSynthesis' in window||!!audioSrc());
  function fillVoices(){const vs=voices();vSel.innerHTML='';vs.forEach(v=>vSel.append(h('option',{value:v.name},v.name)));const p=pickVoice();if(p)vSel.value=p.name;vHint.style.display=vs.length?'none':'block';vHint.textContent=vs.length?'':'Keine deutsche Stimme gefunden. Installieren Sie in den Systemeinstellungen eine deutsche Stimme (macOS: Bedienungshilfen → Gesprochene Inhalte).'}
  try{speechSynthesis.onvoiceschanged=fillVoices}catch(e){}
  vBtn.onclick=()=>{VO.on=!VO.on;vBtn.textContent=VO.on?'🔊 Ton an':'🔇 Ton aus';vBtn.setAttribute('aria-pressed',VO.on);vSel.style.display=rSel.style.display=VO.on?'':'none';if(VO.on){vis=true;fillVoices();tick()}else{stopSpeech();tick()}};
  vSel.onchange=()=>{VO.name=vSel.value;tick()};rSel.onchange=()=>{VO.rate=+rSel.value;tick()};
+ function audioSrc(){return (key==='SG'&&!audioBad)?'audio/sg'+String(n+1).padStart(2,'0')+'.mp3':null}
  function narrate(){const s=A.steps[n];let t=s.t+'. '+s.d;if(s.q)t+=' Achtung, jetzt kommt eine Quizfrage. '+s.q.q+' '+s.q.o.map((o,i)=>'Antwort '+'ABC'[i]+': '+o+'.').join(' ')+' Das Video wartet, bis Sie antworten.';
-  say(t,()=>{if(!playing||!vis||A.steps[n]!==s)return;if(s.q&&answered[n]===undefined)return;timer=setTimeout(()=>{go(n+1);tick()},1000)})}
+  say(t,()=>{if(!playing||!vis||A.steps[n]!==s)return;if(s.q&&answered[n]===undefined)return;timer=setTimeout(()=>{go(n+1);tick()},1000)},audioSrc())}
  function go(i){const old=n;stopSpeech();n=(i+N)%N;aniApply(stage,A,n);render();
   if(A.steps[n].q&&started){ov.innerHTML='';ov.append(h('small',{},'Quizfrage'),h('b',{},'Jetzt sind Sie dran!'));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}
   else if(A.chapters&&(A.steps[n].ch!==A.steps[old].ch||i===0&&old===0)){ov.innerHTML='';ov.append(h('small',{},'Kapitel '+(A.steps[n].ch+1)),h('b',{},A.chapters[A.steps[n].ch]));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}}
