@@ -1041,19 +1041,19 @@ function voiceScore(v){const n=v.name;let s=0;if(/anna/i.test(n)&&/premium/i.tes
 function pickVoice(){const vs=voices();if(!vs.length)return null;return vs.find(v=>v.name===VO.name)||vs.slice().sort((a,b)=>voiceScore(b)-voiceScore(a))[0]}
 function speechClean(t){return String(t).replace(/(^|\.\s)\+\s/g,'$1Vorteil: ').replace(/(^|\.\s)[−-]\s/g,'$1Nachteil: ').replace(/⚠/g,'').replace(/(\d)–(\d)/g,'$1 bis $2').replace(/≈\s*/g,'etwa ').replace(/µm/g,' Mikrometer').replace(/ %/g,' Prozent').replace(/%/g,' Prozent').replace(/Ø\s*/g,'Durchmesser ').replace(/→/g,' führt zu ').replace(/z\. B\./g,'zum Beispiel').replace(/ca\./g,'circa').replace(/\bGJL\b/g,'Grauguss').replace(/\bNE-/g,'N E ').replace(/\bRz\b/g,'R z').replace(/\bRa\b/g,'R a').replace(/\bFT\b/g,'F T').replace(/\bPM\b/g,'Pulvermetallurgie').replace(/\s+/g,' ').trim()}
 let speakTok=0;
-let VA=null,audioBad=false;
+let VA=null;const badSrc=new Set();
 const BG={a:null,own:null,bad:false,vol:.07,t:null};
 function bgFade(to,end){clearInterval(BG.t);const a=BG.a;if(!a)return;BG.t=setInterval(()=>{const d=to-a.volume;if(Math.abs(d)<.01){a.volume=to;clearInterval(BG.t);end&&end()}else a.volume=Math.max(0,Math.min(1,a.volume+Math.sign(d)*.01))},40)}
 function bgOn(o){if(BG.bad)return;try{if(!BG.a){BG.a=new Audio('audio/background.mp3');BG.a.loop=true;BG.a.volume=0;BG.a.onerror=()=>{BG.bad=true};}
  BG.own=o;if(BG.a.paused){const p=BG.a.play();if(p&&p.catch)p.catch(()=>{});}bgFade(BG.vol)}catch(e){BG.bad=true}}
 function bgOff(o){if(!BG.a||(o&&BG.own!==o))return;BG.own=null;bgFade(0,()=>{try{BG.a.pause()}catch(e){}})}
 function stopSpeech(){speakTok++;try{speechSynthesis.cancel()}catch(e){}if(VA){try{VA.onended=VA.onerror=null;VA.pause()}catch(e){}VA=null}}
-function say(text,done,src){
+function say(text,done,src,own){
  stopSpeech();const tok=speakTok;
- if(src&&!audioBad){try{const a=new Audio(src);a.playbackRate=Math.max(.8,Math.min(1.4,VO.rate/1.1));VA=a;
+ if(src&&!badSrc.has(src)){try{const a=new Audio(src);a.__o=own;a.playbackRate=Math.max(.8,Math.min(1.4,VO.rate/1.1));VA=a;
   a.onended=()=>{if(tok!==speakTok)return;VA=null;done&&done()};
-  a.onerror=()=>{if(tok!==speakTok)return;VA=null;audioBad=true;say(text,done)};
-  const p=a.play();if(p&&p.catch)p.catch(e=>{if(tok!==speakTok)return;VA=null;if(e&&e.name==='NotAllowedError'){VO.on=false;done&&done()}else{audioBad=true;say(text,done)}});return}catch(e){}}
+  a.onerror=()=>{if(tok!==speakTok)return;VA=null;badSrc.add(src);say(text,done)};
+  const p=a.play();if(p&&p.catch)p.catch(e=>{if(tok!==speakTok)return;if(e&&e.name==='AbortError')return;VA=null;if(e&&e.name==='NotAllowedError'){VO.on=false;done&&done()}else{badSrc.add(src);say(text,done)}});return}catch(e){}}
  if(!('speechSynthesis' in window)){done&&done();return}
  const parts=speechClean(text).split(/(?<=[.!?:])\s+/).filter(Boolean);
  const v=pickVoice();let i=0;
@@ -1105,15 +1105,15 @@ function aniPlayer(key){
  try{speechSynthesis.onvoiceschanged=fillVoices}catch(e){}
  vBtn.onclick=()=>{VO.on=!VO.on;vBtn.textContent=VO.on?'🔊 Ton an':'🔇 Ton aus';vBtn.setAttribute('aria-pressed',VO.on);vSel.style.display=rSel.style.display=VO.on?'':'none';if(VO.on){vis=true;fillVoices();tick()}else{stopSpeech();tick()}};
  vSel.onchange=()=>{VO.name=vSel.value;tick()};rSel.onchange=()=>{VO.rate=+rSel.value;tick()};
- function audioSrc(){const pre={SG:'sg',FG:'fg'}[key];return (pre&&!audioBad)?'audio/'+pre+String(n+1).padStart(2,'0')+'.mp3':null}
+ function audioSrc(){const pre={SG:'sg',FG:'fg'}[key];if(!pre)return null;const f='audio/'+pre+String(n+1).padStart(2,'0')+'.mp3';return badSrc.has(f)?null:f}
  function narrate(){const s=A.steps[n];let t=s.t+'. '+s.d;if(s.q)t+=' Achtung, jetzt kommt eine Quizfrage. '+s.q.q+' '+s.q.o.map((o,i)=>'Antwort '+'ABC'[i]+': '+o+'.').join(' ')+' Das Video wartet, bis Sie antworten.';
-  say(t,()=>{if(!playing||!vis||A.steps[n]!==s)return;if(s.q&&answered[n]===undefined)return;timer=setTimeout(()=>{go(n+1);tick()},1000)},audioSrc())}
+  say(t,()=>{if(!playing||!vis||A.steps[n]!==s)return;if(s.q&&answered[n]===undefined)return;timer=setTimeout(()=>{go(n+1);tick()},1000)},audioSrc(),root)}
  function go(i){const old=n;stopSpeech();n=(i+N)%N;aniApply(stage,A,n);render();
   if(A.steps[n].q&&started){ov.innerHTML='';ov.append(h('small',{},'Quizfrage'),h('b',{},'Jetzt sind Sie dran!'));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}
   else if(A.chapters&&(A.steps[n].ch!==A.steps[old].ch||i===0&&old===0)){ov.innerHTML='';ov.append(h('small',{},'Kapitel '+(A.steps[n].ch+1)),h('b',{},A.chapters[A.steps[n].ch]));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}}
  function tick(){clearTimeout(timer);const b=bar.firstChild;if(VO.on&&playing&&vis&&started)bgOn(root);else bgOff(root);b.style.animation='none';void b.offsetWidth;
-  if(voiceOn()&&playing&&vis&&started){b.style.animation='none';const au=audioSrc();if(VA&&VA.paused&&au&&VA.src.endsWith(au)){const pr=VA.play();if(pr&&pr.catch)pr.catch(()=>{});return}narrate();return}
-  if(VA&&!VA.paused)VA.pause();
+  if(voiceOn()&&playing&&vis&&started){b.style.animation='none';const au=audioSrc();if(VA&&VA.__o===root&&VA.paused&&au&&VA.src.endsWith(au)){const pr=VA.play();if(pr&&pr.catch)pr.catch(()=>{});return}narrate();return}
+  if(VA&&VA.__o===root&&!VA.paused)VA.pause();
   if(!voiceOn())stopSpeech();
   const hold=A.steps[n].q&&answered[n]===undefined;if(playing&&vis&&!hold){b.style.animation='aniFill 6.5s linear forwards';timer=setTimeout(()=>{go(n+1);tick()},6500)}else b.style.animation='none'}
  function restart(){tick()}
@@ -1122,7 +1122,7 @@ function aniPlayer(key){
  root.start=()=>{started=true;n=0;go(0);tick()};
  root.stop=()=>{started=false;stopSpeech();bgOff(root);clearTimeout(timer)};
  root.setVis=v=>{vis=v;tick()};
- if('IntersectionObserver' in window)new IntersectionObserver(es=>{const v=es[0].isIntersecting;if(v!==vis){vis=v;tick()}},{threshold:.05}).observe(root);
+ if('IntersectionObserver' in window)new IntersectionObserver(es=>{const v=es[es.length-1].isIntersecting||(root.offsetParent!==null&&(()=>{const r=root.getBoundingClientRect();return r.height>0&&r.bottom>0&&r.top<innerHeight})());if(v!==vis){vis=v;tick()}},{threshold:.05}).observe(root);
  aniApply(stage,A,0);render();
  setTimeout(tick,100);
  return root;
