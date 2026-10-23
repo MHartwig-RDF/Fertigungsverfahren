@@ -1135,12 +1135,13 @@ function aniPlayer(key){
   if(A.steps[n].q&&started){ov.innerHTML='';ov.append(h('small',{},'Quizfrage'),h('b',{},'Jetzt sind Sie dran!'));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}
   else if(A.chapters&&(A.steps[n].ch!==A.steps[old].ch||i===0&&old===0)){ov.innerHTML='';ov.append(h('small',{},'Kapitel '+(A.steps[n].ch+1)),h('b',{},A.chapters[A.steps[n].ch]));ov.classList.remove('show');void ov.offsetWidth;ov.classList.add('show')}}
  function tick(){clearTimeout(timer);const b=bar.firstChild;if(VO.on&&playing&&vis&&started)bgOn(root);else bgOff(root);b.style.animation='none';void b.offsetWidth;
-  if(voiceOn()&&playing&&vis&&started){b.style.animation='none';narrate();return}
+  if(voiceOn()&&playing&&vis&&started){b.style.animation='none';const au=audioSrc();if(VA&&VA.paused&&au&&VA.src.endsWith(au)){const pr=VA.play();if(pr&&pr.catch)pr.catch(()=>{});return}narrate();return}
+  if(VA&&!VA.paused)VA.pause();
   if(!voiceOn())stopSpeech();
   const hold=A.steps[n].q&&answered[n]===undefined;if(playing&&vis&&!hold){b.style.animation='aniFill 6.5s linear forwards';timer=setTimeout(()=>{go(n+1);tick()},6500)}else b.style.animation='none'}
  function restart(){tick()}
  prev.onclick=()=>{go(n-1);restart()};next.onclick=()=>{go(n+1);restart()};
- play.onclick=()=>{playing=!playing;play.textContent=playing?'⏸':'▶';if(!playing)stopSpeech();tick()};
+ play.onclick=()=>{playing=!playing;play.textContent=playing?'⏸':'▶';if(!playing){if(VA)VA.pause();else stopSpeech()}tick()};
  root.start=()=>{started=true;n=0;go(0);tick()};
  root.stop=()=>{started=false;stopSpeech();bgOff(root);clearTimeout(timer)};
  root.setVis=v=>{vis=v;tick()};
