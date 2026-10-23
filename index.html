@@ -1128,7 +1128,7 @@ function aniPlayer(key){
  try{speechSynthesis.onvoiceschanged=fillVoices}catch(e){}
  vBtn.onclick=()=>{VO.on=!VO.on;vBtn.textContent=VO.on?'🔊 Ton an':'🔇 Ton aus';vBtn.setAttribute('aria-pressed',VO.on);vSel.style.display=rSel.style.display=VO.on?'':'none';if(VO.on){vis=true;fillVoices();tick()}else{stopSpeech();tick()}};
  vSel.onchange=()=>{VO.name=vSel.value;tick()};rSel.onchange=()=>{VO.rate=+rSel.value;tick()};
- function audioSrc(){return (key==='SG'&&!audioBad)?'audio/sg'+String(n+1).padStart(2,'0')+'.mp3':null}
+ function audioSrc(){const pre={SG:'sg',FG:'fg'}[key];return (pre&&!audioBad)?'audio/'+pre+String(n+1).padStart(2,'0')+'.mp3':null}
  function narrate(){const s=A.steps[n];let t=s.t+'. '+s.d;if(s.q)t+=' Achtung, jetzt kommt eine Quizfrage. '+s.q.q+' '+s.q.o.map((o,i)=>'Antwort '+'ABC'[i]+': '+o+'.').join(' ')+' Das Video wartet, bis Sie antworten.';
   say(t,()=>{if(!playing||!vis||A.steps[n]!==s)return;if(s.q&&answered[n]===undefined)return;timer=setTimeout(()=>{go(n+1);tick()},1000)},audioSrc())}
  function go(i){const old=n;stopSpeech();n=(i+N)%N;aniApply(stage,A,n);render();
