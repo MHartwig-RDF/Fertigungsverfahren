@@ -837,10 +837,18 @@ const LB='class="lb"';
  const PM='M170 175H270V105H296V199H170Z M344 105H370V175H470V199H344Z';
  const G=[{id:'tr',d:'M506 50L548 50L534 72L520 72Z'},{id:'el',d:'M520 72h14v91h-14Z'},{id:'zl',d:'M478 163h56v12h-56Z'},{id:'ha',d:'M478 175H492V206H470V190H478Z'},{id:'so',d:'M274 50h18v55h-18Z'},{id:'sc',d:'M180 175V143Q180 135 188 135H198Q206 135 206 143V175Z'},{id:'wp',d:'M354 50h4v55h-4Z'}];
  const holes=G.map(g=>`<path d="${g.d}"/>`).join('');
+ const gd=id=>G.find(g=>g.id===id).d;
+ const PT={sgLok:{a:[[154,71,154,102]]},sgLuk:{a:[[150,238,150,214]]},sgLft:{a:[[214,158,240,173]]},sgLnest:{a:[[446,158,432,187]]},sgLcore:{a:[[320,226,320,200]]},
+  sgLcm:{a:[[282,89,302,99]],h:['M298 88h44v17h-44Z','M298 199h44v17h-44Z']},
+  sgLein:{a:[[470,49,511,60]],h:[gd('tr'),gd('el')]},sgLzl:{a:[[474,157,486,167]],h:[gd('zl')]},sgLha:{a:[[508,222,488,201]],h:[gd('ha')]},
+  sgLso:{a:[[283,47,283,68]],h:[gd('so')]},sgLsc:{a:[[193,133,193,147]],h:[gd('sc')]},sgLwp:{a:[[370,47,360,64]],h:['M352 50h8v55h-8Z']},
+  sgLke:{a:[[239,223,239,212]]},sgLmod:{a:[[240,288,240,203],[400,288,400,203]]},sgLcb:{a:[[540,288,540,222]]}};
+ const PTHTML=Object.keys(PT).map(k=>{const p=PT[k];return `<g id="${k}_p" class="a">${(p.h||[]).map(d=>`<path d="${d}" fill="none" stroke="#fff" stroke-width="4"/><path d="${d}" fill="none" stroke="#e8453c" stroke-width="2.2" stroke-dasharray="5 3"/>`).join('')}${p.a.map(l=>`<line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="#0b101b" stroke-width="6" stroke-linecap="round" marker-end="url(#sgArD)"/><line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="#fff" stroke-width="2.6" stroke-linecap="round" marker-end="url(#sgArW)"/>`).join('')}</g>`}).join('');
  const badge=(id,x,y,plus,txt,anchor='start')=>`<g id="${id}" class="a"><circle cx="${x}" cy="${y}" r="13" fill="${plus?'#22c58b':'#f0504b'}" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y+5}" text-anchor="middle" style="fill:#fff;font:700 17px sans-serif">${plus?'+':'−'}</text><text class="lb" x="${anchor==='start'?x+19:x-19}" y="${y+5}" text-anchor="${anchor}">${txt}</text></g>`;
  const lab=(id,x,y,t,a='middle')=>`<text id="${id}" class="a lb" x="${x}" y="${y}" text-anchor="${a}">${t}</text>`;
  const svg=`<svg viewBox="0 0 640 340" role="img" aria-label="Erklärvideo Sandguss">
 <defs>
+<marker id="sgArD" viewBox="-3 -3 16 16" refX="10" refY="5" markerUnits="userSpaceOnUse" markerWidth="24" markerHeight="24" orient="auto"><path d="M-2 -2L12 5L-2 12Z" fill="#0b101b" stroke="#0b101b" stroke-width="2" stroke-linejoin="round"/></marker><marker id="sgArW" viewBox="-3 -3 16 16" refX="10" refY="5" markerUnits="userSpaceOnUse" markerWidth="20" markerHeight="20" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#fff"/></marker>
 <pattern id="sgDots" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#d6a15c"/><circle cx="2" cy="3" r="1.3" fill="#a8773a"/><circle cx="7" cy="7" r="1.1" fill="#b98440"/></pattern>
 <pattern id="sgDots2" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#9c6a35"/><circle cx="2" cy="2" r="1.1" fill="#7a4f26"/></pattern>
 <mask id="sgM"><rect width="640" height="340" fill="#fff"/><g fill="#000"><path d="${PM}"/>${holes}</g></mask>
@@ -879,15 +887,17 @@ ${badge('sgB2',150,140,true,'groß & schwer · viele Werkstoffe')}
 ${badge('sgB3',300,290,false,'Form verloren → jedes Teil neu formen')}
 ${badge('sgB4',455,232,false,'rau · Grat · Formschräge','end')}
 ${badge('sgB5',520,92,false,'Anguss + Speiser','end')}
+${PTHTML}
 </svg>`;
  const LBL=['sgLok','sgLuk','sgLft','sgLnest','sgLcore','sgLcm','sgLein','sgLzl','sgLha','sgLso','sgLsc','sgLwp','sgLke','sgLmod','sgLcb','sgLfill','sgLroh','sgLfin'];
+ Object.keys(PT).forEach(k=>LBL.push(k+'_p'));
  const init={sgUK:{opacity:1,animation:'',transform:'translateY(0px)'},sgOK:{opacity:1,transform:'translateY(0px)'},sgPg:{opacity:0},sgChill:{opacity:1},sgFT:{opacity:0,animation:''},sgPl:{opacity:0,transform:'translateY(0px)'},sgPu:{opacity:0,transform:'translateY(0px)'},sgCore:{opacity:1,transform:'translate(0px,0px)',animation:''},sgMetal:{transform:'scaleY(0)',transformOrigin:'50% 100%',fill:'#ff8f2a',animation:''},sgScrap:{opacity:0,transform:'translate(0px,0px)'},sgNest:{opacity:0},sgLadle:{opacity:0,transform:'translate(70px,-10px) rotate(0deg)',transformOrigin:'0% 0%'},sgStream:{transform:'scaleY(0)',transformOrigin:'50% 0%',opacity:1},sgDrill:{opacity:0,transform:'translateY(-30px)'}};
  G.forEach(g=>init['sgCg_'+g.id]={transform:'translateY(0px)'});
  LBL.forEach(l=>init[l]={opacity:0});
  for(let i=1;i<=5;i++)init['sgB'+i]={opacity:0,transform:'scale(.4)'};
  const HL={animation:'hl .8s ease-in-out infinite alternate'},NO={animation:''};
  const offL=()=>{const o={};LBL.forEach(l=>o[l]={opacity:0});return o};
- const on=(...ids)=>{const o={};ids.forEach(i=>o[i]={opacity:1,_d:.3});return o};
+ const on=(...ids)=>{const o={};ids.forEach(i=>{o[i]={opacity:1,_d:.3};if(PT[i])o[i+'_p']={opacity:1,_d:.5}});return o};
  const S=(ch,t,d,f,ap,q)=>({ch,t,d,f,ap,q});
  ANI.SG={color:'#e8a33d',chapters:['Aufbau der Form','Arbeitsschritte beim Maschinenformen','Vor- und Nachteile – begründet'],svg,init,
  steps:[
