@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="de">
-<head>
+<head><script>window.NOFX=1</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ein Bauteil, drei Verfahren – Lernkurs Fertigungsverfahren</title>
@@ -211,64 +211,31 @@ section.step.active{animation:slidein .45s cubic-bezier(.2,.8,.2,1)}
 .pills span{padding:4px 12px;border-radius:20px;font:600 .85rem var(--cond);color:#0c1740;animation:float 3s ease-in-out infinite}
 .pills span:nth-child(1){background:#f4b860}.pills span:nth-child(2){background:#5fe0cf;animation-delay:.4s}.pills span:nth-child(3){background:#ff8d88;animation-delay:.8s}.pills span:nth-child(4){background:#a9b6ff;animation-delay:1.2s}
 @keyframes float{50%{transform:translateY(-4px)}}
-/* ===== GIESSEREI-DESIGN (nur Lernende) ===== */
+/* ===== DESIGN NR. 3: technisch blau + Kupfer ===== */
 html:root:root:root{
-  --paper:#110c0a;--panel:#1e1613;--ink:#f6ece3;--ink2:#c2aea0;--line:#4a3228;--grid:rgba(255,122,26,.04);
-  --steel:#ff7a1a;--steel-d:#e0560a;--steel-l:#34190c;--copper:#ffb347;--copper-l:#3a2410;
-  --ok:#5fe0a8;--ok-l:#12372c;--bad:#ff7d6e;--bad-l:#451a16;--warn:#ffd067;--warn-l:#3a3014;
-  --viewer:#2a1e19;--viewer2:#120c0a;--go:#22c58b;--shadow:0 10px 30px -14px rgba(0,0,0,.9),0 0 0 1px rgba(255,122,26,.14);}
-html{background:#0d0907}
-body{background-color:transparent;background-image:none;color:var(--ink)}
-body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
-  background:radial-gradient(120% 55% at 50% 108%,rgba(255,92,0,.42),rgba(190,40,0,.16) 45%,transparent 70%),
-  radial-gradient(60% 40% at 0% 100%,rgba(255,150,40,.20),transparent 70%),
-  radial-gradient(60% 40% at 100% 100%,rgba(255,150,40,.20),transparent 70%),
-  linear-gradient(#0f0a08,#1a100c);animation:furnace 5s ease-in-out infinite alternate}
-@keyframes furnace{from{opacity:.82}to{opacity:1}}
-body::after{content:"";position:fixed;left:-20%;right:-20%;top:-10%;height:130%;z-index:-1;pointer-events:none;will-change:transform;
-  background:radial-gradient(40% 30% at 20% 70%,rgba(150,135,125,.13),transparent 70%),
-  radial-gradient(35% 28% at 70% 55%,rgba(130,120,115,.11),transparent 70%),
-  radial-gradient(45% 30% at 45% 90%,rgba(170,150,140,.10),transparent 70%);animation:smoke 38s ease-in-out infinite alternate}
-@keyframes smoke{from{transform:translate3d(-4%,6%,0) scale(1)}to{transform:translate3d(5%,-9%,0) scale(1.12)}}
-#embers{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
-header.top{background:linear-gradient(100deg,#240a04,#7d1d05 35%,#e4500a 65%,#ffb347 85%,#e4500a);background-size:220% 100%;animation:molten 14s ease-in-out infinite alternate;border-bottom:2px solid #ff9a3d;box-shadow:0 6px 28px -6px rgba(255,100,10,.7),0 1px 0 rgba(255,230,160,.4) inset}
-@keyframes molten{from{background-position:0 0}to{background-position:100% 0}}
-.brand{color:#fff4e0;text-shadow:0 0 14px rgba(255,170,60,.8)}.brand span{color:#ffe08a}
-.progress-track{background:rgba(0,0,0,.4)}
-.progress-fill{background:linear-gradient(90deg,#ff4d00,#ff9a1a,#ffe27a);box-shadow:0 0 14px #ff7a1a,0 0 28px rgba(255,100,0,.6)}
-.dot{background:rgba(0,0,0,.35);border-color:rgba(255,190,120,.5)}
-.dot.done{background:#ff9a1a;border-color:#ffd37a;color:#2a0d00}
-.dot.cur{background:#fff1c9;border-color:#ffd37a;color:#7a2200;box-shadow:0 0 0 3px rgba(255,170,60,.5),0 0 18px #ff7a1a}
-h1,h2,h3{color:#fff3e4}
-h1 span,h2 span{color:#ffb347}
-.kicker{color:#ff9a3d;text-shadow:0 0 10px rgba(255,120,20,.5)}
-.card{background:linear-gradient(180deg,#241a16,#1b1310);border:1px solid rgba(255,122,26,.22)}
-.card.tint{background:linear-gradient(135deg,#3a1b0c,#1e1411);border:1px solid #ff7a1a;box-shadow:0 0 22px -10px #ff7a1a}
-.card.warn{background:#3a2a10;border-color:#a86a00}
-.btn{background:linear-gradient(180deg,#ff8a2a,#d94a05);border-color:#ffb36b;color:#1a0800;box-shadow:0 4px 16px -4px rgba(255,100,10,.8);font-weight:700}
-.btn:hover{box-shadow:0 0 22px rgba(255,140,30,.85)}
-.btn.ghost{background:transparent;color:#ffb36b;border-color:#ff9a3d;box-shadow:none}
-.btn.ghost:hover{background:rgba(255,122,26,.16)}
-.btn.copper{background:linear-gradient(180deg,#ffd27a,#ff9a1a);color:#2a0d00}
-.mod{background:#211814;border-color:#4a3228}.mod .no{background:#ff7a1a;color:#1a0800}.mod.done .no{background:var(--go);color:#04281c}
-.mod:hover{box-shadow:0 0 20px -6px #ff7a1a}
-.opt{background:#251b17;border-color:#4a3228}.opt:hover{border-color:#ff9a3d}
-.flow .box{background:linear-gradient(135deg,#3a1b0c,#241a16);color:#fff1e0;border-color:#ff7a1a}
-.hero{background:radial-gradient(circle at 80% 15%,rgba(255,110,20,.75),transparent 55%),radial-gradient(circle at 10% 110%,rgba(255,60,0,.5),transparent 55%),linear-gradient(135deg,#1c0b06,#4a1405 70%,#7a2406);border:1px solid rgba(255,150,60,.45);box-shadow:0 0 40px -12px rgba(255,100,10,.8),inset 0 -40px 60px -30px rgba(255,90,0,.55)}
-.hero h1 span{background:linear-gradient(90deg,#ffe27a,#ff8a2a,#ffe27a);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:molten 5s ease-in-out infinite alternate;filter:drop-shadow(0 0 10px rgba(255,120,20,.7))}
-.hero p{color:#ffe3c7}
-.pills span{color:#1a0800}
-.pills span:nth-child(1){background:#ffb347}.pills span:nth-child(2){background:#ff8a2a}.pills span:nth-child(3){background:#ff5a2a}.pills span:nth-child(4){background:#ffd27a}
-.ptabs button{background:#251b17}
-.ani-stage{background:radial-gradient(circle at 50% 30%,#2a1c16,#0c0807);box-shadow:0 0 34px -8px var(--pc),0 0 0 1px rgba(255,140,40,.25)}
-.ani-info{background:#211814}
-.toast{background:#3a1405;border:1px solid #ff9a3d;box-shadow:0 0 24px rgba(255,110,20,.6)}
-html .wform{background:#4a2410;color:#ffe3c7;border:1px solid #ff9a3d}
-input,select,textarea{background:#17100d;color:var(--ink);border-color:#5a3b2c}
-.viewer{border-color:#5a3b2c}
-.progress-fill,.hero{animation-timing-function:ease-in-out}
-@media(max-width:700px){body::after{animation:none}}
-@media(prefers-reduced-motion:reduce){body::before,body::after,header.top,.hero h1 span{animation:none!important}}
+  --paper:#eef1f4;--panel:#ffffff;--ink:#17212b;--ink2:#4a5866;--line:#cdd5de;
+  --steel:#16324f;--steel-d:#0f2338;--steel-l:#e1e8f0;--copper:#b5651d;--copper-l:#f6e6d6;
+  --ok:#2e7d4f;--ok-l:#dcefe3;--bad:#b3392f;--bad-l:#f6dcd8;--warn:#9a6a00;--warn-l:#fbefc8;
+  --viewer:#e3e8ee;--viewer2:#cfd6dc;
+}
+html{color-scheme:light}
+header.top{background:#16324f;color:#fff;border-bottom:3px solid var(--copper)}
+header.top .brand{color:#fff}
+header.top .brand span{color:#f2a965}
+header.top .small,header.top small{color:#c9d6e4}
+header.top .progress-track{background:#2d4a69}
+header.top .progress-fill{background:#f2a965}
+.kicker{color:var(--copper)}
+.btn{background:var(--steel);border-color:var(--steel);color:#fff}
+.btn.copper{background:var(--copper);border-color:var(--copper);color:#fff}
+.card{box-shadow:none}
+.hero{background:#16324f;border-radius:12px;box-shadow:none}
+.hero h1 span,.hero .kicker{color:#f2a965}
+.hero p{color:#d5e0ec}
+.hero .viewer{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.2)}
+.dot.cur{background:var(--copper);border-color:var(--copper);color:#fff;box-shadow:none}
+body{background-image:none}
+
 /* Verfahrens-Tabs + Animation */
 .ptabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .ptabs button{font:600 1rem var(--cond);padding:9px 18px;border-radius:24px;border:2px solid var(--tc);background:var(--panel);color:var(--ink);cursor:pointer;transition:transform .15s,background .2s}
@@ -1178,7 +1145,7 @@ function burst(){
 
 /* Gießerei: Glut, Funken, Rauch (nur Lernende) */
 (function(){
- if(typeof TEACHER!=='undefined'&&TEACHER)return;
+ if(typeof TEACHER!=='undefined'&&TEACHER)return;if(window.NOFX)return;
  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const c=document.createElement('canvas');c.id='embers';c.setAttribute('aria-hidden','true');document.body.prepend(c);
  const g=c.getContext('2d');let W=0,H=0;
