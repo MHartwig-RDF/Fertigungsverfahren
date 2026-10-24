@@ -980,45 +980,116 @@ ${badge('fgB6',350,84,false,'Hoher Aufwand: Maschinen')}${badge('fgB7',350,130,f
  ]};
 })();
 
-/* ---------- Druckguss ---------- */
+/* ---------- Druckguss als Erklärvideo (3 Kapitel) ---------- */
 (function(){
- const notch='M300 105H336V140H396V158H470V172H396V190H336V225H300Z';
- ANI.DG={color:'#f0504b',
- svg:`<svg viewBox="0 0 640 330" role="img" aria-label="Animation Druckguss">
+ const CAV='M300 105H264V140H204V190H264V225H300Z';
+ const MVD='M110 90H300V260H110Z '+CAV;
+ const PT={
+  dgLbew:{a:[[190,76,190,100]],h:['M110 90H300V260H110Z']},
+  dgLfes:{a:[[385,76,385,100]],h:['M300 90H470V260H300Z']},
+  dgLft:{a:[[300,276,300,258]]},
+  dgLcav:{a:[[196,296,226,193]],h:[CAV]},
+  dgLsl:{a:[[535,288,535,188]],h:['M470 146H600V184H470Z']},
+  dgLpis:{a:[[590,232,588,188]],h:['M574 156h24v18h-24Z']},
+  dgLtr:{a:[[480,118,528,144]],h:['M530 146h30v10h-30Z']},
+  dgLang:{a:[[385,296,385,175]],h:['M300 158h170v14h-170Z']},
+  dgLej:{a:[[150,76,168,108]],h:['M150 110h114v6h-114Z','M150 212h114v6h-114Z','M140 108h10v112h-10Z']},
+  dgLdos:{a:[[470,70,520,92]]},
+  dgLbis:{a:[[500,232,486,190]],h:['M470 156h24v18h-24Z']}
+ };
+ const PTHTML=Object.keys(PT).map(k=>{const p=PT[k];return `<g id="${k}_p" class="a">${(p.h||[]).map(d=>`<path d="${d}" fill="none" stroke="#fff" stroke-width="4"/><path d="${d}" fill="none" stroke="#e8453c" stroke-width="2.2" stroke-dasharray="5 3"/>`).join('')}${p.a.map(l=>`<line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="#fff" stroke-width="3" stroke-linecap="round" marker-end="url(#dgArW)" style="filter:drop-shadow(0 0 1.2px rgba(0,0,0,.55))"/>`).join('')}</g>`}).join('');
+ const badge=(id,x,y,plus,txt,anchor='start')=>`<g id="${id}" class="a"><circle cx="${x}" cy="${y}" r="13" fill="${plus?'#22c58b':'#f0504b'}" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y+5}" text-anchor="middle" style="fill:#fff;font:700 17px sans-serif">${plus?'+':'−'}</text><text class="lb" x="${anchor==='start'?x+19:x-19}" y="${y+5}" text-anchor="${anchor}">${txt}</text></g>`;
+ const lab=(id,x,y,t,a='middle')=>`<text id="${id}" class="a lb" x="${x}" y="${y}" text-anchor="${a}">${t}</text>`;
+ const svg=`<svg viewBox="0 0 640 340" role="img" aria-label="Erklärvideo Druckguss">
 <defs>
+<marker id="dgArW" viewBox="-3 -3 16 16" refX="10" refY="5" markerUnits="userSpaceOnUse" markerWidth="22" markerHeight="22" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#fff"/></marker>
 <linearGradient id="dgSt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7d8da4"/><stop offset="1" stop-color="#55647a"/></linearGradient>
-<clipPath id="dgCc"><path d="${notch}"/></clipPath>
-<clipPath id="dgCs"><rect x="470" y="158" width="130" height="14"/></clipPath>
+<clipPath id="dgCc"><path d="${CAV}"/></clipPath>
 </defs>
-<g id="dgL" class="a"><rect x="110" y="90" width="190" height="170" rx="4" fill="url(#dgSt)" stroke="#a7b8cf"/><text class="lb" x="205" y="180" text-anchor="middle" style="fill:#e8f0fb">feste Formhälfte</text></g>
-<g id="dgR" class="a">
- <path d="M300 90H470V260H300Z ${notch}" fill="url(#dgSt)" fill-rule="evenodd" stroke="#a7b8cf"/>
- <rect x="470" y="148" width="130" height="34" fill="#55647a" stroke="#a7b8cf"/><rect x="470" y="158" width="130" height="14" fill="#0b101b"/>
- <g clip-path="url(#dgCc)"><rect id="dgMc" class="a glow" x="300" y="105" width="172" height="120" fill="#ff8f2a"/></g>
- <g clip-path="url(#dgCs)"><rect id="dgMs" class="a glow" x="525" y="158" width="75" height="14" fill="#ff8f2a"/></g>
- <rect id="dgPiston" class="a" x="596" y="148" width="26" height="34" fill="#cfd8e3" stroke="#8a97aa"/><rect id="dgRod" class="a" x="620" y="160" width="20" height="10" fill="#8d9bb0"/>
- <path id="dgPart" class="a" d="${notch.replace('H470V172H396','H396V172H396')}" fill="#9aa7b5" stroke="#cfd8e3"/>
- <rect id="dgPin1" class="a" x="336" y="110" width="150" height="6" fill="#d8e1ee"/><rect id="dgPin2" class="a" x="336" y="214" width="150" height="6" fill="#d8e1ee"/>
- <text class="lb" x="430" y="240" text-anchor="middle" style="fill:#e8f0fb">bewegliche Formhälfte</text>
+<rect x="60" y="262" width="580" height="4" rx="2" fill="#3a4a66"/>
+<g id="dgMv" class="a">
+ <path d="${MVD}" fill="url(#dgSt)" fill-rule="evenodd" stroke="#a7b8cf"/>
+ <g clip-path="url(#dgCc)"><rect id="dgMc" class="a glow" x="204" y="105" width="96" height="120" fill="#ff8f2a"/></g>
+ <g id="dgPins" class="a"><rect x="140" y="108" width="10" height="112" fill="#cfd8e3"/><rect x="150" y="111" width="114" height="5" fill="#d8e1ee"/><rect x="150" y="213" width="114" height="5" fill="#d8e1ee"/></g>
+ <path id="dgPart" class="a" d="${CAV}" fill="#9aa7b5" stroke="#cfd8e3"/>
+ <rect id="dgStub" class="a" x="300" y="158" width="22" height="14" fill="#9aa7b5" stroke="#cfd8e3"/>
 </g>
-<g id="dgLadle" class="a"><path d="M530 80L590 74L582 104L538 104Z" fill="#aab6c4" stroke="#5b6a7e"/><path d="M534 84L586 78L583 88L538 92Z" fill="#ff8f2a"/></g>
-<rect id="dgStream" class="a" x="540" y="104" width="4" height="48" fill="#ff8f2a"/>
-<g id="dgGauge" class="a"><circle cx="110" cy="42" r="30" fill="#0b101b" stroke="#a7b8cf" stroke-width="2"/><path d="M86 54A27 27 0 0 1 134 54" fill="none" stroke="#3a4a66" stroke-width="5"/><path id="dgArc" class="a" d="M86 54A27 27 0 0 1 134 54" fill="none" stroke="#ff5a5a" stroke-width="5" pathLength="100" stroke-dasharray="100" style="stroke-dashoffset:100"/><line id="dgNeedle" class="a" x1="110" y1="42" x2="110" y2="20" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>
-<g id="dgBits" class="a" fill="#9aa7b5"><rect x="372" y="262" width="12" height="6"/><rect x="372" y="268" width="9" height="5"/><rect x="418" y="262" width="11" height="6"/></g>
-<text id="dgL0" class="a lb" x="320" y="296" text-anchor="middle">Dauerform aus Warmarbeitsstahl</text>
-<text id="dgL1" class="a lb" x="320" y="296" text-anchor="middle">Schmelze (meist NE-Legierung) in die Gießkammer</text>
-<text id="dgL2" class="a lb" x="320" y="296" text-anchor="middle">Kolben presst die Schmelze unter hohem Druck ein</text>
-<text id="dgL2g" class="a lb" x="166" y="48">10–200 MPa</text>
-<text id="dgL3" class="a lb" x="320" y="314" text-anchor="middle">Form öffnet · Auswerferstifte drücken das Teil heraus</text>
-<text id="dgL4" class="a lb" x="320" y="314" text-anchor="middle">Anguss &amp; Grat entfernen – dann nächster Zyklus</text>
-</svg>`,
- init:{dgL:{transform:'translateX(-80px)'},dgR:{transform:'translateX(80px)'},dgMc:{transform:'scaleX(0)',transformOrigin:'100% 50%',fill:'#ff8f2a',animation:''},dgMs:{transform:'translateX(0px) scaleX(0)',transformOrigin:'100% 50%',fill:'#ff8f2a',animation:''},dgPiston:{transform:'translateX(0)'},dgRod:{transform:'translateX(0)'},dgPart:{opacity:0,transform:'none',fill:'#9aa7b5'},dgPin1:{transform:'translateX(0)'},dgPin2:{transform:'translateX(0)'},dgLadle:{opacity:0,transform:'translate(60px,-14px) rotate(0deg)',transformOrigin:'0% 0%'},dgStream:{opacity:0},dgGauge:{opacity:0},dgNeedle:{transform:'rotate(-70deg)',transformOrigin:'0% 100%'},dgArc:{strokeDashoffset:100},dgBits:{opacity:0,transform:'none'},dgL0:{opacity:1},dgL1:{opacity:0},dgL2:{opacity:0},dgL2g:{opacity:0},dgL3:{opacity:0},dgL4:{opacity:0}},
+<g id="dgFx">
+ <rect x="300" y="90" width="170" height="170" fill="url(#dgSt)" stroke="#a7b8cf"/>
+ <rect x="300" y="158" width="170" height="14" fill="#0b101b"/>
+ <rect id="dgMr" class="a glow" x="300" y="158" width="170" height="14" fill="#ff8f2a"/>
+ <rect x="470" y="146" width="130" height="38" fill="#55647a" stroke="#a7b8cf"/>
+ <rect x="470" y="156" width="130" height="18" fill="#0b101b"/>
+ <rect x="530" y="146" width="30" height="10" fill="#0b101b"/>
+ <path d="M522 126L568 126L560 146L530 146Z" fill="none" stroke="#a7b8cf" stroke-width="2"/>
+ <rect id="dgMs" class="a glow" x="470" y="156" width="104" height="18" fill="#ff8f2a"/>
+ <rect id="dgBisc" class="a" x="470" y="156" width="24" height="18" fill="#98a6b6" stroke="#cfd8e3"/>
+ <rect id="dgPiston" class="a" x="574" y="156" width="24" height="18" fill="#cfd8e3" stroke="#8a97aa"/>
+ <rect id="dgRod" class="a" x="598" y="162" width="42" height="6" fill="#8d9bb0"/>
+</g>
+<g id="dgLadle" class="a"><path d="M520 70L580 64L572 94L528 94Z" fill="#aab6c4" stroke="#5b6a7e"/><path d="M524 74L576 68L573 78L528 82Z" fill="#ff8f2a"/></g>
+<rect id="dgStream" class="a" x="543" y="94" width="4" height="52" fill="#ff8f2a"/>
+<g id="dgGauge" class="a"><circle cx="606" cy="34" r="26" fill="#0b101b" stroke="#a7b8cf" stroke-width="2"/><path d="M584 46A24 24 0 0 1 628 46" fill="none" stroke="#3a4a66" stroke-width="5"/><path id="dgArc" class="a" d="M584 46A24 24 0 0 1 628 46" fill="none" stroke="#ff5a5a" stroke-width="5" pathLength="100" stroke-dasharray="100" style="stroke-dashoffset:100"/><line id="dgNeedle" class="a" x1="606" y1="46" x2="606" y2="22" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>
+<g id="dgBits" class="a" fill="#9aa7b5"><rect x="300" y="268" width="16" height="7"/><rect x="310" y="276" width="10" height="6"/><rect x="326" y="270" width="12" height="6"/></g>
+${lab('dgLbew',190,70,'bewegliche Formhälfte')}${lab('dgLfes',385,70,'feste Formhälfte')}
+${lab('dgLft',300,292,'Formteilungsebene')}
+${lab('dgLcav',150,310,'Formhohlraum (Gravur)')}
+${lab('dgLsl',535,302,'Gießkammer')}${lab('dgLpis',590,246,'Gießkolben')}
+${lab('dgLtr',468,114,'Einfüllöffnung','end')}
+${lab('dgLang',385,310,'Anguss (Verteilerkanal)')}
+${lab('dgLej',150,70,'Auswerferstifte','start')}
+${lab('dgLdos',468,64,'abgemessene Schmelze','end')}
+${lab('dgLbis',520,246,'Restkuchen')}
+<g id="dgLmach" class="a"><path d="M110 296V302H300V296M470 296V302H600V296" fill="none" stroke="#fff" stroke-width="2"/><text class="lb" x="205" y="320" text-anchor="middle">Formschließeinheit</text><text class="lb" x="535" y="320" text-anchor="middle">Gießeinheit</text></g>
+<line id="dgFTl" class="a" x1="300" y1="80" x2="300" y2="268" stroke="#ffd23f" stroke-width="2.5" stroke-dasharray="8 6"/>
+${lab('dgLsch',320,290,'Form schließen, zuhalten, Trennmittel aufsprühen')}
+${lab('dgLvor',360,290,'Kolben schiebt die Schmelze langsam bis zum Anschnitt')}
+${lab('dgLfuel',360,290,'schneller Einpressvorgang: Druckenergie wird zu Bewegungsenergie')}
+${lab('dgLnach',360,290,'Druck wird bis zur Erstarrung gehalten')}
+${lab('dgLauf',360,290,'Form öffnet · Auswerferstifte schieben das Teil heraus')}
+${lab('dgLent',420,312,'Anguss, Restkuchen und Grat abtrennen')}
+${lab('dgLkk',360,290,'Kaltkammer: Schmelze wird von außen in die Kammer dosiert')}
+${badge('dgB1',150,128,true,'konturengenau, auch enge Querschnitte')}
+${badge('dgB2',150,176,true,'dünnwandig, maßgenau, glatt')}
+${badge('dgB3',150,224,true,'schneller Zyklus → hohe Produktivität')}
+${badge('dgB4',150,150,true,'kurzer Weg: Schmelze → Fertigteil')}
+${badge('dgB5',150,200,false,'teure Dauerform + Maschine')}
+${badge('dgB6',150,200,false,'Werkstoffe begrenzt · Poren möglich ⚠')}
+${PTHTML}
+</svg>`;
+ const LBL=['dgLbew','dgLfes','dgLft','dgLcav','dgLsl','dgLpis','dgLtr','dgLang','dgLej','dgLdos','dgLbis','dgLmach','dgFTl','dgLsch','dgLvor','dgLfuel','dgLnach','dgLauf','dgLent','dgLkk'];
+ Object.keys(PT).forEach(k=>LBL.push(k+'_p'));
+ const init={dgMv:{transform:'translateX(0px)'},dgMc:{transform:'scaleX(0)',transformOrigin:'100% 50%',fill:'#ff8f2a',animation:''},dgMr:{transform:'scaleX(0)',transformOrigin:'100% 50%',fill:'#ff8f2a',animation:''},dgMs:{transform:'scale(0,0)',transformOrigin:'100% 100%',fill:'#ff8f2a',animation:'',opacity:1},dgBisc:{opacity:0},dgPiston:{transform:'translateX(0px)'},dgRod:{transform:'translateX(0px)'},dgPins:{transform:'translateX(0px)'},dgPart:{opacity:0,transform:'translate(0px,0px)',fill:'#9aa7b5'},dgStub:{opacity:0,transform:'translate(0px,0px)'},dgLadle:{opacity:0,transform:'translate(60px,-14px) rotate(0deg)',transformOrigin:'0% 0%'},dgStream:{opacity:0},dgGauge:{opacity:0},dgNeedle:{transform:'rotate(-70deg)',transformOrigin:'50% 100%'},dgArc:{strokeDashoffset:100},dgBits:{opacity:0,transform:'none'}};
+ LBL.forEach(l=>init[l]={opacity:0});
+ for(let i=1;i<=6;i++)init['dgB'+i]={opacity:0,transform:'scale(.4)'};
+ const offL=()=>{const o={};LBL.forEach(l=>o[l]={opacity:0});return o};
+ const on=(...ids)=>{const o={};ids.forEach(i=>{o[i]={opacity:1,_d:.3};if(PT[i])o[i+'_p']={opacity:1,_d:.5}});return o};
+ const S=(ch,t,d,f,ap,q)=>({ch,t,d,f,ap,q});
+ const A_=Object.assign;
+ const offB=()=>{const o={};for(let i=1;i<=6;i++)o['dgB'+i]={opacity:0,transform:'scale(.4)'};return o};
+ const pop=id=>({[id]:{opacity:1,transform:'scale(1)',_d:.3}});
+ const cold={dgMc:{fill:'#98a6b6',animation:'none'},dgMr:{fill:'#98a6b6',animation:'none'}};
+ ANI.DG={color:'#f0504b',chapters:['Aufbau von Form und Maschine','Arbeitsschritte beim Druckgießen','Vor- und Nachteile – begründet'],svg,init,
  steps:[
- {t:'Form schließen',d:'Die Dauerform aus Warmarbeitsstahl wird geschlossen und mit hoher Kraft zugehalten. Dieselbe Form wird für Tausende Abgüsse benutzt.',f:[['Dauerform aus Warmarbeitsstahl','']],ap:{dgL:{transform:'translateX(0px)'},dgR:{transform:'translateX(0px)'}}},
- {t:'Schmelze dosieren',d:'Eine genau abgemessene Menge Schmelze wird in die Gießkammer gegeben. Verarbeitet werden vor allem NE-Legierungen, z. B. Aluminium.',f:[['vor allem NE-Legierungen','']],ap:{dgLadle:{opacity:1,transform:'translate(0px,0px) rotate(-16deg)'},dgStream:{opacity:1,_d:.4},dgMs:{transform:'translateX(0px) scaleX(1)',_d:.7},dgL0:{opacity:0},dgL1:{opacity:1,_d:.6}}},
- {t:'Einpressen',d:'Ein Kolben presst die Schmelze mit hohem Druck blitzschnell in die Form. So füllen sich auch dünne Wände, bevor die Schmelze erstarrt.',f:[['Druck 10–200 MPa',''],['dünnwandige Teile','']],ap:{dgLadle:{opacity:0,transform:'translate(60px,-14px) rotate(0deg)'},dgStream:{opacity:0},dgPiston:{transform:'translateX(-72px)'},dgRod:{transform:'translateX(-72px)'},dgMs:{transform:'translateX(-72px) scaleX(1)'},dgMc:{transform:'scaleX(1)',_d:.25},dgGauge:{opacity:1},dgNeedle:{transform:'rotate(70deg)',_d:.1},dgArc:{strokeDashoffset:12,_d:.1},dgL1:{opacity:0},dgL2:{opacity:1,_d:.4},dgL2g:{opacity:1,_d:.6}}},
- {t:'Erstarren & Auswerfen',d:'In der gekühlten Stahlform erstarrt die Schmelze in kurzer Zeit. Die Form öffnet, Auswerferstifte drücken das Teil heraus – der nächste Zyklus kann beginnen.',f:[['kurze Zykluszeit → sehr hohe Stückzahlen','Fachwissen']],ap:{dgMc:{fill:'#98a6b6',animation:'none'},dgMs:{fill:'#98a6b6',animation:'none'},dgPart:{opacity:1,_d:.3},dgGauge:{opacity:0},dgL:{transform:'translateX(-80px)'},dgR:{transform:'translateX(80px)'},dgPin1:{transform:'translateX(-42px)',_d:1},dgPin2:{transform:'translateX(-42px)',_d:1},dgPiston:{transform:'translateX(0px)'},dgRod:{transform:'translateX(0px)'},dgL2:{opacity:0},dgL2g:{opacity:0},dgL3:{opacity:1,_d:.8}}},
- {t:'Entgraten',d:'Anguss und Grat werden abgetrennt (Stanzen). Funktionsflächen wie die Lagerbohrung werden bei Bedarf spanend nachbearbeitet. Druckguss-Teile sind schon maßgenau – wenig Nacharbeit.',f:[['Al-Teile bis ca. 50 kg',''],['Radien/Toleranzen','⚠ ohne Quelle im Material']],ap:{dgPart:{transform:'translate(-18px,92px)',fill:'#dce8f7',_d:.2},dgBits:{opacity:1,transform:'translateY(-10px)',_d:.8},dgL3:{opacity:0},dgL4:{opacity:1,_d:.5}}}
+ S(0,'1 · Die Dauerform','Beim Druckguss wird nicht in Sand oder Keramik gegossen, sondern in eine Dauerform aus Stahl, die für sehr viele Abgüsse benutzt wird. Sie besteht aus zwei Hälften: der festen Formhälfte und der beweglichen Formhälfte. Zusammen bilden sie die zweiteilige Druckgießform.',[['zweiteilige Dauerform',''],['feste und bewegliche Hälfte','']],A_(offL(),offB(),on('dgLbew','dgLfes'))),
+ S(0,'2 · Teilungsebene und Formhohlraum','Dort, wo sich die Hälften berühren, liegt die Formteilungsebene. In die bewegliche Hälfte ist der Formhohlraum eingearbeitet, auch Gravur genannt. Er hat die Gestalt des späteren Bauteils, hier des Lagerdeckels.',[['Formteilungsebene',''],['Formhohlraum (Gravur)','']],A_(offL(),{dgFTl:{opacity:1,_d:.2}},on('dgLft','dgLcav'))),
+ S(0,'3 · Gießkammer und Gießkolben','An die feste Formhälfte schließt die Gießkammer an. Das ist ein Rohr, in das die Schmelze dosiert wird, und zwar durch die Einfüllöffnung. In der Kammer läuft der Gießkolben. Er presst die Schmelze später in die Form.',[['Gießkammer',''],['Gießkolben',''],['Einfüllöffnung','']],A_(offL(),{dgFTl:{opacity:0}},on('dgLsl','dgLpis','dgLtr'))),
+ S(0,'4 · Anguss und Auswerfer','Von der Gießkammer führt der Anguss, ein Verteilerkanal, zum Formhohlraum. In der beweglichen Hälfte sitzen die Auswerferstifte. Sie schieben das fertige Teil später aus der Form.',[['Anguss',''],['Auswerferstifte','']],A_(offL(),on('dgLang','dgLej'))),
+ S(0,'5 · Die Maschine: zwei Baugruppen','Eine Druckgießmaschine hat zwei Hauptbaugruppen. Die Formschließeinheit öffnet, schließt und hält die Form zu. Die Gießeinheit presst die Schmelze in die Form und hält den Druck bis zur Erstarrung. Je nachdem, wie die Schmelze zugeführt wird, unterscheidet man Warmkammer- und Kaltkammermaschinen. Hier sehen Sie das Kaltkammerverfahren.',[['Formschließeinheit',''],['Gießeinheit',''],['Warmkammer / Kaltkammer','']],A_(offL(),on('dgLmach'),{dgMv:{transform:'translateX(-70px)'}}),{q:'Welche zwei Hauptbaugruppen hat eine Druckgießmaschine?',o:['Formschließeinheit und Gießeinheit','Schmelzofen und Kühlturm','Modellplatte und Formkasten'],a:0,e:'Die Formschließeinheit öffnet, schließt und hält die Form zu. Die Gießeinheit presst das flüssige Metall in die Form.'}),
+ S(1,'6 · Form vorbereiten und schließen','Der Zyklus beginnt mit dem Schließen der Form. Die Formschließeinheit hält sie mit hoher Kraft zu, damit sie dem Einpressdruck standhält. Vorher werden Formhälften gereinigt und mit Trennmittel besprüht ⚠. Das erleichtert später das Ausformen.',[['Form schließen und zuhalten',''],['Trennmittel sprühen','⚠ Fachwissen, prüfen']],A_(offL(),{dgMv:{transform:'translateX(0px)'}},on('dgLsch'))),
+ S(1,'7 · Schmelze dosieren','Eine genau abgemessene Menge Schmelze, das Dosiergewicht, wird in die Gießkammer gebracht. Das geschieht durch eine Schöpfkelle, ein Förderaggregat oder mit Überdruck. Verarbeitet werden vor allem Nichteisenmetalle, zum Beispiel Aluminium.',[['Dosiergewicht',''],['vor allem NE-Legierungen','']],A_(offL(),on('dgLdos'),{dgLadle:{opacity:1,transform:'translate(0px,0px) rotate(-16deg)'},dgStream:{opacity:1,_d:.4},dgMs:{transform:'scale(.5,.55)',_d:.7}}),{q:'Warum muss die Schmelzmenge beim Dosieren genau stimmen?',o:['Zu wenig Schmelze füllt die Form nicht, zu viel überlastet die Form','Weil die Schmelze sonst zu heiß wird','Weil sonst der Kolben nicht passt'],a:0,e:'Die Menge muss das Bauteil, den Anguss und einen kleinen Restkuchen decken. Wird zu wenig dosiert, bleibt das Teil unvollständig.'}),
+ S(1,'8 · Vorlauf des Gießkolbens','Der Gießkolben fährt zuerst langsam an und schiebt die Schmelze bis zum Anschnitt vor. Dabei kann Luft aus der Kammer entweichen ⚠. Wer hier zu schnell fährt, wirbelt die Schmelze auf und schließt Luft ein.',[['langsame erste Phase','⚠ Fachwissen, prüfen'],['Luft entweicht','']],A_(offL(),on('dgLvor'),{dgLadle:{opacity:0,transform:'translate(60px,-14px) rotate(0deg)'},dgStream:{opacity:0},dgPiston:{transform:'translateX(-40px)'},dgRod:{transform:'translateX(-40px)'},dgMs:{transform:'translateX(-40px) scale(.5,1)'}})),
+ S(1,'9 · Formfüllung','Jetzt fährt der Kolben schnell weiter und presst die Schmelze mit hohem Druck in die Form. Die Füllung beruht also nicht auf der Schwerkraft wie beim Sandguss, sondern auf der Umsetzung von Druckenergie in Bewegungsenergie. Der Druck liegt je nach Bauteil bei etwa 10 bis 200 MPa ⚠.',[['Druckenergie → Bewegungsenergie',''],['Druck 10–200 MPa','⚠ Richtwert, prüfen']],A_(offL(),on('dgLfuel'),{dgPiston:{transform:'translateX(-80px)'},dgRod:{transform:'translateX(-80px)'},dgMs:{opacity:0},dgBisc:{opacity:1,_d:.6},dgMr:{transform:'scaleX(1)',_d:.3},dgMc:{transform:'scaleX(1)',_d:.9},dgGauge:{opacity:1},dgNeedle:{transform:'rotate(65deg)'},dgArc:{strokeDashoffset:12}}),{q:'Worauf beruht die Formfüllung beim Druckguss?',o:['Auf der Schwerkraft wie beim Sandguss','Auf der Umsetzung von Druckenergie in Bewegungsenergie','Auf der Kapillarkraft in der Form'],a:1,e:'Der Kolben presst die Schmelze unter hohem Druck in die Form. Dadurch strömt sie auch in sehr enge Querschnitte.'}),
+ S(1,'10 · Nachdruck und Erstarren','Der Kolben hält den Druck, bis die Schmelze erstarrt ist. So wird die Schwindung ausgeglichen. Die Stahlform kühlt die Schmelze schnell ab, deshalb dauert das Erstarren nur kurz.',[['Druck bis zur Erstarrung',''],['Dauerform kühlt schnell','']],A_(offL(),on('dgLnach'),cold,{dgBisc:{fill:'#98a6b6'}})),
+ S(1,'11 · Öffnen und Auswerfen','Die Formschließeinheit fährt die bewegliche Hälfte auf. Das erstarrte Teil bleibt in ihr haften. Dann schieben die Auswerferstifte es aus dem Hohlraum, und es fällt heraus.',[['Form öffnen',''],['Auswerferstifte','']],A_(offL(),on('dgLauf'),{dgGauge:{opacity:0},dgMr:{opacity:0},dgMc:{opacity:0},dgPart:{opacity:1,_d:.1},dgStub:{opacity:1,_d:.1},dgMv:{transform:'translateX(-80px)'},dgPins:{transform:'translateX(36px)',_d:1.4},dgPiston:{transform:'translateX(-92px)'},dgRod:{transform:'translateX(-92px)'}})),
+ S(1,'12 · Entgraten und Nachbearbeiten','Das Teil kommt mit Anguss und Grat heraus. Das ist überstehendes Material an der Teilungsebene. Beides wird abgetrennt, zum Beispiel durch Stanzen. Funktionsflächen wie die Lagerbohrung werden bei Bedarf spanend nachbearbeitet ⚠. Der Abfall wird wieder eingeschmolzen ⚠. Dann beginnt der nächste Zyklus.',[['Entgraten (Stanzen)',''],['Anguss wieder einschmelzen','⚠ Fachwissen, prüfen']],A_(offL(),on('dgLent'),{dgPins:{transform:'translateX(0px)'},dgPart:{transform:'translate(36px,50px)',fill:'#dce8f7',_d:.2},dgStub:{transform:'translate(36px,50px)',_d:.2},dgBits:{opacity:1,_d:.9},dgBisc:{opacity:0}}),{q:'Warum ist beim Druckguss meist nur wenig Nacharbeit nötig?',o:['Weil die Dauerform das Bauteil sehr maßgenau abbildet','Weil die Schmelze sehr dünnflüssig ist','Weil man mit Sand besser formen kann'],a:0,e:'Die Stahlform und der hohe Druck bilden die Kontur sehr genau ab. Meist sind nur Anguss und Grat zu entfernen.'}),
+ S(2,'+ Konturengenaue Formwiedergabe','Begründung aus der Formfüllung: Der hohe Druck presst die Schmelze auch in sehr enge Querschnitte. Sie schlägt an der Formwand an und bildet die Kontur genau ab.',[['Druckwirkung → konturengenau','']],A_(offL(),offB(),{dgMv:{transform:'translateX(0px)'},dgPart:{opacity:0,transform:'translate(0px,0px)'},dgStub:{opacity:0,transform:'translate(0px,0px)'},dgBits:{opacity:0},dgPiston:{transform:'translateX(0px)'},dgRod:{transform:'translateX(0px)'},dgMc:{opacity:1,transform:'scaleX(1)'}},pop('dgB1'))),
+ S(2,'+ Dünnwandig, maßgenau, glatt','Begründung aus der Formfüllung: Weil die Schmelze unter Druck auch dünne Wände füllt und die Stahlform glatt ist, entstehen dünnwandige, maßgenaue Teile mit hoher Oberflächenqualität. Das spart Nacharbeit.',[['dünnwandig und maßgenau',''],['hohe Oberflächenqualität','']],A_(offL(),offB(),pop('dgB2'))),
+ S(2,'+ Hohe Produktivität','Begründung aus dem Arbeitsablauf: Dieselbe Dauerform wird immer wieder benutzt. Der Zyklus aus Schließen, Einpressen, Erstarren und Auswerfen läuft schnell und lässt sich automatisieren. So entstehen große Stückzahlen in kurzer Zeit.',[['Dauerform, kurzer Zyklus','']],A_(offL(),offB(),pop('dgB3'))),
+ S(2,'+ Kürzester Verfahrensweg','Begründung aus den Arbeitsschritten: Aus der Schmelze entsteht in einem Schritt ein fast fertiges Bauteil. Es gibt keine Formherstellung wie beim Sandguss und keine Schalenherstellung wie beim Feinguss. Das verkürzt den Weg zum Fertigteil.',[['Schmelze → Fertigteil','']],A_(offL(),offB(),pop('dgB4'))),
+ S(2,'− Hohe Werkzeug- und Maschinenkosten','Begründung aus dem Aufbau: Die Dauerform aus Stahl muss sehr genau gefertigt werden und hohem Druck standhalten. Dazu kommt die aufwendige Maschine. Das lohnt sich nur bei großen Stückzahlen ⚠. Bei kleinen Serien sind die Werkzeugkosten je Teil zu hoch.',[['Form- und Maschinenkosten','⚠ Break-even Station 5']],A_(offL(),offB(),pop('dgB5')),{q:'Wann lohnt sich Druckguss wirtschaftlich besonders?',o:['Bei einem einzelnen Prototyp','Bei sehr großen Stückzahlen','Bei Einzelstücken aus Stahl'],a:1,e:'Die teure Dauerform verteilt sich nur bei hohen Stückzahlen auf viele Teile. Erst dann sind die Stückkosten niedrig.'}),
+ S(2,'− Begrenzte Werkstoffe und Poren','Begründung aus Vorlauf und Formfüllung: Die Stahlform hält die Schmelze nur aus, wenn deren Schmelztemperatur niedrig genug ist. Deshalb werden vor allem Aluminium-, Magnesium- und Zinklegierungen vergossen ⚠. Durch das schnelle Füllen kann Luft eingeschlossen werden, es entstehen Poren ⚠.',[['vor allem NE-Legierungen','⚠ Fachwissen, prüfen'],['Lufteinschlüsse möglich','⚠ Fachwissen, prüfen']],A_(offL(),offB(),pop('dgB6'))),
+ S(2,'Fazit: Wann Druckguss?','Druckguss passt, wenn dünnwandige, maßgenaue Bauteile in großen Stückzahlen gebraucht werden, zum Beispiel Getriebegehäuse, Kupplungsgehäuse, Ölwannen oder Querträger. Er passt weniger bei kleinen Stückzahlen oder bei Werkstoffen mit hohem Schmelzpunkt, etwa Stahl. Für unseren Lagerdeckel ist die Stückzahl entscheidend.',[['Beispiele: Getriebegehäuse, Ölwanne, Querträger',''],['Entscheidung über die Stückzahl','']],A_(offL(),offB()))
  ]};
 })();
 
@@ -1105,7 +1176,7 @@ function aniPlayer(key){
  try{speechSynthesis.onvoiceschanged=fillVoices}catch(e){}
  vBtn.onclick=()=>{VO.on=!VO.on;vBtn.textContent=VO.on?'🔊 Ton an':'🔇 Ton aus';vBtn.setAttribute('aria-pressed',VO.on);vSel.style.display=rSel.style.display=VO.on?'':'none';if(VO.on){vis=true;fillVoices();tick()}else{stopSpeech();tick()}};
  vSel.onchange=()=>{VO.name=vSel.value;tick()};rSel.onchange=()=>{VO.rate=+rSel.value;tick()};
- function audioSrc(){const pre={SG:'sg',FG:'fg'}[key];if(!pre)return null;const f='audio/'+pre+String(n+1).padStart(2,'0')+'.mp3';return badSrc.has(f)?null:f}
+ function audioSrc(){const pre={SG:'sg',FG:'fg',DG:'dg'}[key];if(!pre)return null;const f='audio/'+pre+String(n+1).padStart(2,'0')+'.mp3';return badSrc.has(f)?null:f}
  function narrate(){const s=A.steps[n];let t=s.t+'. '+s.d;if(s.q)t+=' Achtung, jetzt kommt eine Quizfrage. '+s.q.q+' '+s.q.o.map((o,i)=>'Antwort '+'ABC'[i]+': '+o+'.').join(' ')+' Das Video wartet, bis Sie antworten.';
   say(t,()=>{if(!playing||!vis||A.steps[n]!==s)return;if(s.q&&answered[n]===undefined)return;timer=setTimeout(()=>{go(n+1);tick()},1000)},audioSrc(),root)}
  function go(i){const old=n;stopSpeech();n=(i+N)%N;aniApply(stage,A,n);render();
