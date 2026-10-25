@@ -1113,9 +1113,9 @@ function pickVoice(){const vs=voices();if(!vs.length)return null;return vs.find(
 function speechClean(t){return String(t).replace(/(^|\.\s)\+\s/g,'$1Vorteil: ').replace(/(^|\.\s)[−-]\s/g,'$1Nachteil: ').replace(/⚠/g,'').replace(/(\d)–(\d)/g,'$1 bis $2').replace(/≈\s*/g,'etwa ').replace(/µm/g,' Mikrometer').replace(/ %/g,' Prozent').replace(/%/g,' Prozent').replace(/Ø\s*/g,'Durchmesser ').replace(/→/g,' führt zu ').replace(/z\. B\./g,'zum Beispiel').replace(/ca\./g,'circa').replace(/\bGJL\b/g,'Grauguss').replace(/\bNE-/g,'N E ').replace(/\bRz\b/g,'R z').replace(/\bRa\b/g,'R a').replace(/\bFT\b/g,'F T').replace(/\bPM\b/g,'Pulvermetallurgie').replace(/\s+/g,' ').trim()}
 let speakTok=0;
 let VA=null;const badSrc=new Set();
-const BG={a:null,own:null,bad:false,vol:.07,t:null};
-function bgFade(to,end){clearInterval(BG.t);const a=BG.a;if(!a)return;BG.t=setInterval(()=>{const d=to-a.volume;if(Math.abs(d)<.01){a.volume=to;clearInterval(BG.t);end&&end()}else a.volume=Math.max(0,Math.min(1,a.volume+Math.sign(d)*.01))},40)}
-function bgOn(o){if(BG.bad)return;try{if(!BG.a){BG.a=new Audio('audio/background.mp3');BG.a.loop=true;BG.a.volume=0;BG.a.onerror=()=>{BG.bad=true};}
+const BG={a:null,own:null,bad:false,vol:1,t:null};
+function bgFade(to,end){clearInterval(BG.t);const a=BG.a;if(!a)return;try{const t0=a.volume;a.volume=t0>.5?.4:.6;const ign=Math.abs(a.volume-(t0>.5?.4:.6))>.05;a.volume=t0;if(ign){if(to===0&&end)end();return}}catch(e){}BG.t=setInterval(()=>{const d=to-a.volume;if(Math.abs(d)<.01){a.volume=to;clearInterval(BG.t);end&&end()}else a.volume=Math.max(0,Math.min(1,a.volume+Math.sign(d)*.01))},40)}
+function bgOn(o){if(BG.bad)return;try{if(!BG.a){BG.a=new Audio('audio/background2.mp3');BG.a.loop=true;BG.a.volume=0;BG.a.onerror=()=>{BG.bad=true};}
  BG.own=o;if(BG.a.paused){const p=BG.a.play();if(p&&p.catch)p.catch(()=>{});}bgFade(BG.vol)}catch(e){BG.bad=true}}
 function bgOff(o){if(!BG.a||(o&&BG.own!==o))return;BG.own=null;bgFade(0,()=>{try{BG.a.pause()}catch(e){}})}
 function stopSpeech(){speakTok++;try{speechSynthesis.cancel()}catch(e){}if(VA){try{VA.onended=VA.onerror=null;VA.pause()}catch(e){}VA=null}}
