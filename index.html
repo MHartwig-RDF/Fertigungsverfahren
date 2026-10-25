@@ -318,7 +318,7 @@ body{background-image:none}
   <div class="top-row">
    <div class="brand">Ein Bauteil, <span>drei Verfahren</span></div>
    <div class="top-actions">
-    <button class="btn ghost sm" id="btnMenu" aria-label="Stand sichern oder laden">Stand ⇅</button>
+    <button class="btn ghost sm" id="btnMenu" aria-label="Speichern oder laden">💾 Speichern</button>
     <button class="btn ghost sm" id="btnTheme" aria-label="Hell/Dunkel">◐</button>
    </div>
   </div>
@@ -333,10 +333,10 @@ body{background-image:none}
 </footer>
 
 <dialog id="dlgMenu">
- <h3>Stand sichern oder laden</h3>
+ <h3>Speichern oder laden</h3>
  <p class="small">Ihr Arbeitsstand liegt nur in diesem Browser. Sichern Sie ihn als Datei, um ihn später oder auf einem anderen Gerät weiterzubearbeiten. Es werden keine personenbezogenen Daten verlangt – tragen Sie nur einen Teamnamen ein.</p>
- <p><button class="btn" id="mExpJson">Stand als Datei speichern (.json)</button></p>
- <p><label class="btn ghost" style="display:inline-block">Stand laden (.json)<input type="file" id="mImp" accept=".json,application/json" hidden></label></p>
+ <p><button class="btn" id="mExpJson">Als Datei speichern (.json)</button></p>
+ <p><label class="btn ghost" style="display:inline-block">Gespeicherte Datei laden (.json)<input type="file" id="mImp" accept=".json,application/json" hidden></label></p>
  <p><button class="btn ghost" id="mExpMd">Entscheidungsdokument (.md)</button></p>
  <p><button class="btn ghost" id="mReset">Alles zurücksetzen</button></p>
  <p style="text-align:right"><button class="btn sm" id="mClose">Schließen</button></p>
@@ -1280,7 +1280,7 @@ build[0]=()=>{
   h('div',{class:'card'},h('h3',{},'Ihr Weg durch den Kurs'),list,
    h('p',{class:'small'},'Jede Station endet mit einem Freigabe-Gate: Erst wenn die Aufgaben bearbeitet sind, schaltet der nächste Schritt frei.')),
   h('div',{class:'card'},h('h3',{},'Arbeitsformen'),h('div',{class:'scroll'},h('table',{class:'t'},h('thead',{},h('tr',{},h('th',{},'Station'),h('th',{},'Arbeitsform'))),h('tbody',{},h('tr',{},h('td',{},'1 · 2 · 3 · 4'),h('td',{},'Einzel- oder Partnerarbeit: Basiswissen für alle')),h('tr',{},h('td',{},'5'),h('td',{},'Musterfall: Schnelle bearbeiten ihn schon in Einzel- oder Partnerarbeit, spätestens erledigt ihn die Gruppe gemeinsam. Pflicht für alle.')),h('tr',{},h('td',{},'6 · 7 · 8'),h('td',{},'Gruppenstationen (3–4 Personen, Pflicht): Jede Gruppe bearbeitet eine Station. Die Lehrkraft teilt zu.')),h('tr',{},h('td',{},'9'),h('td',{},'Puffer: nur bei großen Klassen oder für besonders schnelle Gruppen')),h('tr',{},h('td',{},'10'),h('td',{},'Abschluss (Einzel, Partner, Gruppe oder Plenum): Ergebnisse sichern, Umwelt und Arbeitssicherheit beurteilen'))))),h('p',{class:'small'},'Reihenfolge: erst 1 → 2 → 3 → 4, dann der Musterfall (5), danach Ihre Gruppenstation (6–8), zuletzt der Abschluss.')),
-  h('div',{class:'card'},h('label',{},h('b',{},'Teamname '),'(keine Klarnamen) '),team,h('p',{class:'small'},'Ihr Stand wird in diesem Browser gespeichert. Über „Stand ⇅“ oben speichern Sie ihn als Datei.')),
+  h('div',{class:'card'},h('label',{},h('b',{},'Teamname '),'(keine Klarnamen) '),team,h('p',{class:'small'},'Ihre Arbeit wird in diesem Browser automatisch gespeichert. Über „Speichern“ oben sichern Sie sie zusätzlich als Datei.')),
   h('div',{class:'nav'},h('span'),h('button',{class:'btn',onclick:()=>{S.visit.start=true;save();go(1)}},'Los geht’s →')));
 };
 
